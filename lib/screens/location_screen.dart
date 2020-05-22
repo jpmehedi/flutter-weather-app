@@ -30,14 +30,14 @@ class _LocationScreenState extends State<LocationScreen> {
         weatherMassage = "Unable to connect location";
         cityName = ' ';
         return;
-      } else {
+      } 
         double temp = weatherData['main']['temp'];
         temperature = temp.toInt();
         weatherMassage = weather.getMessage(temperature);
         var condition = weatherData['weather'][0]['id'];
         weatherIcon = weather.getWeatherIcon(condition);
         cityName = weatherData['name'];
-      }
+      
     });
   }
 
@@ -73,10 +73,20 @@ class _LocationScreenState extends State<LocationScreen> {
                     ),
                   ),
                   FlatButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context){
-                        return CityScreen();
-                      }));
+                    onPressed: ()async {
+                      var typeName = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return CityScreen();
+                          },
+                        ),
+                      );
+                     
+                      if(typeName != null){
+                        var weatherData =await weather.getCityName(typeName);
+                        updateUI(weatherData);
+                      } 
                     },
                     child: Icon(
                       Icons.location_city,
